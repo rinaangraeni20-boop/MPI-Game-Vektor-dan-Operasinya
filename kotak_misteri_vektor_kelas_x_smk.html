@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kotak Misteri Matematika — Vektor dan Operasinya</title>
+<style>
+:root{--navy:#071b62;--blue:#0878ef;--cyan:#36d9ff;--yellow:#ffd83d;--purple:#7b35e8;--green:#19b96b;--red:#ef4545;--white:#fff}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:#fff;background:radial-gradient(circle at 20% 10%,#176ed6 0,#0a3b9c 35%,#071747 100%);min-height:100vh}
+button{font:inherit;cursor:pointer;touch-action:manipulation}
+button:focus-visible{outline:4px solid #fff;outline-offset:4px}
+.app{max-width:1200px;margin:auto;padding:clamp(14px,3vw,32px)}
+.top{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.tag{background:var(--yellow);color:#08215f;padding:10px 18px;border-radius:18px;font-weight:900;transform:rotate(-2deg)}
+h1{font-size:clamp(2rem,5vw,4.4rem);line-height:.98;text-align:center;margin:18px 0 8px;text-shadow:0 5px 0 #063277,0 9px 18px #00133f;font-weight:1000;letter-spacing:-1px}
+h1 span{color:var(--yellow)}
+.subtitle{text-align:center;font-size:clamp(1.05rem,2.5vw,1.7rem);font-weight:850;color:#ffdf48;margin:0 0 20px}
+.intro{text-align:center;max-width:800px;margin:0 auto 22px;background:#071b62c9;border:3px solid #32caff;border-radius:22px;padding:14px 20px;font-size:clamp(1rem,2vw,1.3rem);font-weight:750}
+.stats{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin:18px 0 24px}
+.stat{background:#06164bd9;border:3px solid #30c9ff;border-radius:18px;padding:10px 22px;min-width:155px;text-align:center;box-shadow:0 7px 0 #041039}
+.stat small{display:block;font-weight:800;color:#d9f5ff;font-size:.95rem}.stat strong{font-size:1.8rem;color:#ffe45b}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(10px,2vw,22px);margin:25px 0}
+.box{position:relative;min-height:clamp(145px,22vw,235px);border:0;border-radius:24px;color:#fff;font-weight:1000;font-size:clamp(2.8rem,7vw,5rem);text-shadow:0 4px 0 #07184e;box-shadow:inset 0 -12px 0 #0002,0 10px 0 #031443,0 16px 25px #0004;transition:transform .18s,filter .18s;overflow:hidden}
+.box:before{content:"";position:absolute;left:0;right:0;top:12%;height:15%;background:#ffffff36;border-top:4px solid #ffffff88;border-bottom:4px solid #ffffff88}
+.box:after{content:"";position:absolute;left:13%;right:13%;bottom:12%;height:10px;background:#ffffff38;border-radius:20px}
+.box span{position:relative;z-index:1;display:block;font-size:.42em;margin-top:5px}
+.box b{position:relative;z-index:1}
+.box:nth-child(1){background:linear-gradient(135deg,#20caff,#0753dc);border:4px solid #74eaff}
+.box:nth-child(2){background:linear-gradient(135deg,#bd5aff,#6519d8);border:4px solid #e0aaff}
+.box:nth-child(3){background:linear-gradient(135deg,#3eea91,#078747);border:4px solid #9dffca}
+.box:nth-child(4){background:linear-gradient(135deg,#ff6c55,#d7192c);border:4px solid #ffb3a6}
+.box:not(:disabled):hover{transform:translateY(-7px) rotate(-1deg);filter:brightness(1.12)}
+.box:disabled{cursor:default;filter:grayscale(.6);opacity:.65}
+.box.opened{font-size:clamp(1rem,2vw,1.35rem);background:#16295b;border:3px dashed #9fcfff;text-shadow:none}
+.box.opened b{font-size:2.4rem}
+.controls{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin:24px 0}
+.btn{border:0;border-radius:18px;padding:16px 25px;min-height:58px;font-weight:950;font-size:clamp(1rem,2vw,1.25rem);box-shadow:0 6px 0 #07133f;transition:transform .15s}
+.btn:active{transform:translateY(3px);box-shadow:0 3px 0 #07133f}
+.primary{background:linear-gradient(#ffef63,#ffbf12);color:#08205c;border:3px solid #fff2a2}
+.secondary{background:#702de0;color:#fff;border:3px solid #c9a3ff}
+.sound{background:#083078;color:white;border:3px solid #39d7ff}
+.note{text-align:center;color:#d4edff;font-size:.95rem}
+.panel{display:none;background:#f7fbff;color:#10245b;border-radius:26px;padding:clamp(18px,4vw,34px);max-width:820px;margin:24px auto;border:5px solid #48d8ff;box-shadow:0 12px 0 #031443,0 20px 45px #0005}
+.panel.show{display:block;animation:rise .35s ease-out}
+.panel h2{font-size:clamp(1.5rem,3vw,2.1rem);margin:0 0 12px;color:#073d9b}
+.question{font-size:clamp(1.15rem,2.4vw,1.55rem);font-weight:850;line-height:1.4;margin:16px 0}
+.answers{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.answer{min-height:64px;padding:12px;border-radius:15px;border:3px solid #b4d9ff;background:#e8f4ff;color:#0a2869;font-weight:850;font-size:clamp(1rem,2vw,1.15rem);text-align:left}
+.answer:hover:not(:disabled){background:#d4ebff;border-color:#3187ed}
+.answer:disabled{cursor:default}
+.answer.correct{background:#c9f8db;border-color:#16a05a}
+.answer.wrong{background:#ffe0e0;border-color:#e54c4c}
+.feedback{margin:16px 0;padding:14px;border-radius:15px;background:#e7f3ff;font-weight:750;line-height:1.5;display:none}
+.feedback.show{display:block}
+.bonus{text-align:center;padding:16px;background:#fff2b6;border:3px dashed #e6a700;border-radius:18px}
+.bonus .big{font-size:3.5rem}
+.hidden{display:none!important}
+.footer{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.confetti{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:10}
+.confetti i{position:absolute;top:-20px;width:10px;height:18px;animation:fall 1.6s linear forwards}
+@keyframes fall{to{transform:translateY(110vh) rotate(700deg);opacity:.1}}
+@keyframes rise{from{opacity:0;transform:translateY(18px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes wobble{0%,100%{transform:rotate(0) scale(1)}25%{transform:rotate(-5deg) scale(1.05)}55%{transform:rotate(5deg) scale(1.07)}80%{transform:rotate(-3deg) scale(1.03)}}
+.box.animate{animation:wobble .55s ease-in-out}
+@media(max-width:720px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.box{min-height:155px}.answers{grid-template-columns:1fr}.top{justify-content:center}.tag{font-size:.95rem}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="top">
+    <div class="tag">KELAS X • SMK</div>
+    <button class="btn sound" id="soundBtn" aria-pressed="true">🔊 Suara: ON</button>
+  </div>
+  <h1><span>KOTAK MISTERI</span><br>MATEMATIKA</h1>
+  <p class="subtitle">Vektor dan Operasinya</p>
+  <div class="intro" id="intro">Pilih satu kotak misteri, jawab tantangannya, dan kumpulkan poin sebanyak-banyaknya!</div>
+  <div class="stats">
+    <div class="stat"><small>🏆 SKOR</small><strong id="score">0</strong></div>
+    <div class="stat"><small>🎁 KOTAK DIBUKA</small><strong><span id="opened">0</span> / 4</strong></div>
+  </div>
+  <div class="grid" id="grid" aria-label="Empat kotak misteri">
+    <button class="box" data-index="0" aria-label="Buka kotak misteri 1"><b>?</b><span>KOTAK 1</span></button>
+    <button class="box" data-index="1" aria-label="Buka kotak misteri 2"><b>?</b><span>KOTAK 2</span></button>
+    <button class="box" data-index="2" aria-label="Buka kotak misteri 3"><b>?</b><span>KOTAK 3</span></button>
+    <button class="box" data-index="3" aria-label="Buka kotak misteri 4"><b>?</b><span>KOTAK 4</span></button>
+  </div>
+  <section class="panel" id="panel" aria-live="polite">
+    <h2 id="panelTitle">Kotak Misteri</h2>
+    <div id="panelBody"></div>
+    <div class="feedback" id="feedback"></div>
+    <div class="controls">
+      <button class="btn primary hidden" id="continueBtn">KEMBALI KE KOTAK</button>
+    </div>
+  </section>
+  <div class="controls">
+    <button class="btn primary" id="startBtn">▶ MULAI BERMAIN</button>
+    <button class="btn secondary" id="againBtn">↻ MAIN LAGI</button>
+  </div>
+  <p class="note">Petunjuk: setiap kotak hanya dapat dibuka satu kali. Jawaban benar bernilai 100 poin.</p>
+</div>
+<div class="confetti" id="confetti"></div>
+<script>
+const challenges = [
+ {type:"quiz",title:"Kotak 1 — Konsep Vektor",q:"Manakah yang merupakan besaran vektor?",options:["Massa","Waktu","Perpindahan","Suhu"],correct:2,explain:"Perpindahan adalah besaran vektor karena memiliki besar dan arah."},
+ {type:"quiz",title:"Kotak 2 — Penjumlahan Vektor",q:"Diketahui A = (2, 3) dan B = (4, 1). Berapakah A + B?",options:["(6, 4)","(2, 2)","(8, 3)","(6, 3)"],correct:0,explain:"Jumlahkan komponen yang bersesuaian: A + B = (2 + 4, 3 + 1) = (6, 4)."},
+ {type:"quiz",title:"Kotak 3 — Tantangan Perpindahan",q:"Seseorang berjalan 5 meter ke timur, lalu 2 meter ke barat. Berapa perpindahan akhirnya?",options:["7 meter ke timur","7 meter ke barat","3 meter ke timur","3 meter ke barat"],correct:2,explain:"Arah timur dianggap positif: 5 − 2 = 3 meter ke timur."},
+ {type:"bonus",title:"Kotak 4 — Hadiah Kejutan",points:100}
+];
+let score=0, opened=new Set(), soundOn=true, started=false, audioCtx=null;
+const scoreEl=document.getElementById('score'), openedEl=document.getElementById('opened');
+const panel=document.getElementById('panel'), panelTitle=document.getElementById('panelTitle'), panelBody=document.getElementById('panelBody'), feedback=document.getElementById('feedback'), continueBtn=document.getElementById('continueBtn');
+function tone(freq=600,duration=.12,type='sine'){
+ if(!soundOn)return;
+ try{audioCtx=audioCtx||new(window.AudioContext||window.webkitAudioContext)();const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type=type;o.frequency.value=freq;g.gain.setValueAtTime(.07,audioCtx.currentTime);g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+duration);o.connect(g);g.connect(audioCtx.destination);o.start();o.stop(audioCtx.currentTime+duration)}catch(e){}
+}
+function updateStats(){scoreEl.textContent=score;openedEl.textContent=opened.size}
+function confetti(){
+ const root=document.getElementById('confetti');root.innerHTML='';
+ const colors=['#ffdf3d','#35d9ff','#ff62a5','#6ef0a5','#a98bff'];
+ for(let i=0;i<55;i++){const p=document.createElement('i');p.style.left=Math.random()*100+'%';p.style.background=colors[i%colors.length];p.style.animationDelay=Math.random()*.5+'s';p.style.transform=`rotate(${Math.random()*180}deg)`;root.appendChild(p)}
+ setTimeout(()=>root.innerHTML='',2200)
+}
+function openBox(index){
+ if(opened.has(index))return;
+ started=true;
+ const btn=document.querySelector(`.box[data-index="${index}"]`);
+ btn.classList.add('animate');tone(360,.12,'triangle');
+ setTimeout(()=>{
+  btn.classList.remove('animate');opened.add(index);btn.disabled=true;btn.classList.add('opened');btn.innerHTML='<b>✓</b><span>SUDAH DIBUKA</span>';updateStats();
+  const c=challenges[index];panel.classList.add('show');panelTitle.textContent=c.title;panelBody.innerHTML='';feedback.className='feedback';feedback.textContent='';continueBtn.classList.add('hidden');
+  if(c.type==='bonus'){
+    score+=c.points;updateStats();tone(880,.22);confetti();
+    panelBody.innerHTML=`<div class="bonus"><div class="big">🎉</div><h3>SELAMAT! BONUS POIN!</h3><p>Kamu mendapatkan hadiah kejutan sebesar <strong>${c.points} poin</strong>.</p><p>Terus semangat belajar vektor!</p></div>`;
+    continueBtn.classList.remove('hidden');
+  }else{
+    const q=document.createElement('div');q.className='question';q.textContent=c.q;panelBody.appendChild(q);
+    const opts=document.createElement('div');opts.className='answers';
+    c.options.forEach((opt,i)=>{const b=document.createElement('button');b.className='answer';b.textContent=String.fromCharCode(65+i)+'. '+opt;b.addEventListener('click',()=>answer(index,i,opts));opts.appendChild(b)});
+    panelBody.appendChild(opts);
+  }
+  panel.scrollIntoView({behavior:'smooth',block:'nearest'});
+ },360);
+}
+function answer(index,choice,opts){
+ const c=challenges[index];if(opts.dataset.answered)return;opts.dataset.answered='yes';
+ [...opts.children].forEach((b,i)=>{b.disabled=true;if(i===c.correct)b.classList.add('correct');if(i===choice&&choice!==c.correct)b.classList.add('wrong')});
+ if(choice===c.correct){score+=100;feedback.innerHTML='✅ <strong>Hebat! Jawaban benar, +100 poin.</strong><br>'+c.explain;tone(760,.15);setTimeout(()=>tone(980,.18),100);confetti()}
+ else{feedback.innerHTML='💡 <strong>Belum tepat.</strong> Jawaban yang benar: '+String.fromCharCode(65+c.correct)+'. '+c.options[c.correct]+'.<br>'+c.explain;tone(220,.18,'triangle')}
+ feedback.classList.add('show');updateStats();continueBtn.classList.remove('hidden');
+}
+function continueGame(){
+ panel.classList.remove('show');
+ if(opened.size===4){
+  panel.classList.add('show');panelTitle.textContent='🏆 Permainan Selesai!';
+  let message=score>=300?'Luar biasa! Pemahaman vektormu sangat baik.':score>=200?'Bagus sekali! Terus latih kemampuanmu.':'Terima kasih sudah mencoba! Pelajari kembali pembahasan dan coba lagi.';
+  panelBody.innerHTML=`<div class="bonus"><div class="big">🏆</div><h3>Skor Akhir: ${score} poin</h3><p>Kamu telah membuka semua 4 kotak misteri.</p><p>${message}</p><button class="btn primary" onclick="resetGame()">↻ MAIN LAGI</button></div>`;
+  continueBtn.classList.add('hidden');confetti();
+ }else{document.getElementById('grid').scrollIntoView({behavior:'smooth',block:'center'})}
+}
+function resetGame(){
+ score=0;opened=new Set();started=false;updateStats();panel.classList.remove('show');panelBody.innerHTML='';feedback.className='feedback';continueBtn.classList.add('hidden');
+ document.querySelectorAll('.box').forEach((b,i)=>{b.disabled=false;b.classList.remove('opened','animate');b.innerHTML=`<b>?</b><span>KOTAK ${i+1}</span>`});
+ document.getElementById('intro').textContent='Pilih satu kotak misteri, jawab tantangannya, dan kumpulkan poin sebanyak-banyaknya!';
+ tone(520,.1);window.scrollTo({top:0,behavior:'smooth'});
+}
+document.querySelectorAll('.box').forEach(b=>b.addEventListener('click',()=>openBox(Number(b.dataset.index))));
+document.getElementById('startBtn').addEventListener('click',()=>{document.getElementById('intro').textContent='Permainan dimulai! Sentuh salah satu dari empat kotak untuk membuka tantangan.';document.getElementById('grid').scrollIntoView({behavior:'smooth',block:'center'});tone(600,.1)});
+document.getElementById('againBtn').addEventListener('click',resetGame);
+document.getElementById('soundBtn').addEventListener('click',()=>{soundOn=!soundOn;const b=document.getElementById('soundBtn');b.textContent=soundOn?'🔊 Suara: ON':'🔇 Suara: OFF';b.setAttribute('aria-pressed',String(soundOn));if(soundOn)tone(600,.1)});
+continueBtn.addEventListener('click',continueGame);
+</script>
+</body>
+</html>
